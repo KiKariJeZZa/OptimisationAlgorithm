@@ -9,16 +9,23 @@
 from tkinter import *
 import header as header
 import energetic as energetic
+from functools import partial
 
 class GUI:
-    def __init__(self, master):
+    def __init__(self, master, energetics, headers):
         self.master = master
         master.title("Optimisation Algorithm")
+
+        self.header = header.Header(headers)
+        self.energetic = energetic.Energetics(energetics)
 
         self.master.label = Label(master, text="Optimisation Algorithm")
         self.master.label.config(font = ('Helvetica bold',30))
         self.master.label.place(relx = 0.5, rely = 0.5, anchor = 'center')
         self.master.label.pack()
+
+        self.name_energetic = StringVar()
+        self.ROI_energetic = StringVar()
 
     def drop_menu(self):
         return 0
@@ -27,32 +34,40 @@ class GUI:
         return 0
 
     
+
+    def submit(self, master):
+        energetic_name = self.name_energetic.get()
+        energetic_roi = self.ROI_energetic.get()
+        self.energetic.add_energetics([energetic_name,energetic_roi])
+        print(self.energetic.get_energetics())
+        master.destroy()
+    
     def new_window_energetic(self):
-        name_energetic = StringVar()
-        ROI_energetic = StringVar()
         newWindow = Toplevel(self.master)
         newWindow.title("Enter new energetic")
         newWindow.geometry("300x100")
 
-        submit_btn = Button(newWindow, text = 'Okay')
+        submit_btn = Button(newWindow, text = 'Okay', command=partial(self.submit,newWindow))
 
         name_label = Label(newWindow, text = "Name")
-        new_name = Entry(newWindow, textvariable=name_energetic)
+        new_name = Entry(newWindow, textvariable=self.name_energetic)
         ROI_label = Label(newWindow, text = "ROI")
-        new_ROI = Entry(newWindow, textvariable=ROI_energetic)
+        new_ROI = Entry(newWindow, textvariable=self.ROI_energetic)
         name_label.grid(row=0,column=0)
         new_name.grid(row=0,column=1)
         ROI_label.grid(row=1,column=0)
         new_ROI.grid(row=1,column=1)
         submit_btn.grid(row=2,column=0)
+    
+    def refresh(self):
+        self.destroy()
+        self.__init__()
+
+
 
 if __name__ == '__main__':
     root = Tk()
     root.geometry("600x600")
-
-
-    gui = GUI(root)
-
     list = {
         "A4":2,
         "S4":3
@@ -64,6 +79,10 @@ if __name__ == '__main__':
         "4x5",
         "4x6"
     ]
+
+    gui = GUI(root,list,header_database)
+
+
 
     variable = StringVar(root)
     variable.set("Select energetic")
