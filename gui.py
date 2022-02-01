@@ -41,6 +41,8 @@ class GUI:
         headers = OptionMenu(self.master, variable2, *self.header.get_header())
         headers.place(x=450,y=50,anchor='ne')
 
+        
+
     def button(self):
         '''
         Creates a button add more energetics or header types
@@ -53,8 +55,11 @@ class GUI:
         Creates a visualisation of the header
         '''
         canvas = Canvas(self.master)
-        canvas.create_rectangle(230,10,290,60)
-        canvas.place(x=300,y=300)
+        canvas.create_rectangle(230,10,290,70)
+        canvas.create_rectangle(170,10,230,70)
+        canvas.create_rectangle(230,70,290,130)
+        canvas.create_rectangle(170,70,230,130)
+        canvas.place(x=100,y=100)
 
     def submit(self, master):
         '''
@@ -107,9 +112,8 @@ if __name__ == '__main__':
         "4x5",
         "4x6"
     ]
-
+    
     gui = GUI(root,list,header_database)
     gui.drop_menu()
-    gui.draw_header()
 
     root.mainloop()
