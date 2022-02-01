@@ -28,21 +28,49 @@ class GUI:
         self.ROI_energetic = StringVar()
 
     def drop_menu(self):
-        return 0
+        '''
+        Creates drop down menus to select certain energetics or header sizes
+        '''
+        variable = StringVar(self.master)
+        variable.set("Select energetic")
+        energetics = OptionMenu(self.master, variable, *self.energetic.get_energetics())
+        energetics.place(x=150, y = 50, anchor='nw')
+
+        variable2 = StringVar(self.master)
+        variable2.set("Select header size")
+        headers = OptionMenu(self.master, variable2, *self.header.get_header())
+        headers.place(x=450,y=50,anchor='ne')
 
     def button(self):
-        return 0
+        '''
+        Creates a button add more energetics or header types
+        '''
+        add_energetic_button = Button(self.master, text = "Add energetic", command = self.new_window_energetic)
+        add_energetic_button.place(x = 250, y=85)
 
-    
+    def draw_header(self):
+        '''
+        Creates a visualisation of the header
+        '''
+        canvas = Canvas(self.master)
+        canvas.create_rectangle(230,10,290,60)
+        canvas.place(x=300,y=300)
 
     def submit(self, master):
+        '''
+        Submit button that confirms a newly added header or energetic
+        '''
         energetic_name = self.name_energetic.get()
         energetic_roi = self.ROI_energetic.get()
         self.energetic.add_energetics([energetic_name,energetic_roi])
         print(self.energetic.get_energetics())
-        master.destroy()
+        master.destroy() 
+        self.refresh()
     
     def new_window_energetic(self):
+        '''
+        Creates a new window for user to enter a new energetic or header
+        '''
         newWindow = Toplevel(self.master)
         newWindow.title("Enter new energetic")
         newWindow.geometry("300x100")
@@ -60,8 +88,8 @@ class GUI:
         submit_btn.grid(row=2,column=0)
     
     def refresh(self):
-        self.destroy()
-        self.__init__()
+        self.master.destroy()
+        self.__init__(self.master, self.energetic, self.header)
 
 
 
@@ -81,20 +109,7 @@ if __name__ == '__main__':
     ]
 
     gui = GUI(root,list,header_database)
-
-
-
-    variable = StringVar(root)
-    variable.set("Select energetic")
-    energetics = OptionMenu(root, variable, *energetic.Energetics(list).get_energetics())
-    energetics.place(x=150, y = 50, anchor='nw')
-
-    variable2 = StringVar(root)
-    variable2.set("Select header size")
-    headers = OptionMenu(root, variable2, *header_database)
-    headers.place(x=450,y=50,anchor='ne')
-
-    add_energetic_button = Button(root, text = "Add energetic", command = gui.new_window_energetic)
-    add_energetic_button.place(x = 250, y=85)
+    gui.drop_menu()
+    gui.draw_header()
 
     root.mainloop()
