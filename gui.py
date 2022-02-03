@@ -26,21 +26,33 @@ class GUI:
 
         self.name_energetic = StringVar()
         self.ROI_energetic = StringVar()
+        self.select_energetic = StringVar(self.master)
+        self.select_header = StringVar(self.master)
 
+        self.drop_menu()
+        self.update_button()
+        
     def drop_menu(self):
         '''
         Creates drop down menus to select certain energetics or header sizes
         '''
-        variable = StringVar(self.master)
-        variable.set("Select energetic")
-        energetics = OptionMenu(self.master, variable, *self.energetic.get_energetics())
+        self.select_energetic.set("Select energetic")
+        energetics = OptionMenu(self.master, self.select_energetic, *self.energetic.get_energetics())
         energetics.place(x=150, y = 50, anchor='nw')
 
-        variable2 = StringVar(self.master)
-        variable2.set("Select header size")
-        headers = OptionMenu(self.master, variable2, *self.header.get_header())
+        self.select_header.set("Select header size")
+        headers = OptionMenu(self.master, self.select_header, *self.header.get_header())
         headers.place(x=450,y=50,anchor='ne')
 
+    def update_button(self):
+        update_button = Button(self.master, text="Update Header", command=self.draw_header)
+        update_button.place(x = 500, y= 100)
+
+    def get_selected_energetic(self):
+        return self.select_energetic.get()
+
+    def get_selected_header(self):
+        return self.select_header.get()
         
 
     def button(self):
@@ -70,7 +82,7 @@ class GUI:
         self.energetic.add_energetics([energetic_name,energetic_roi])
         print(self.energetic.get_energetics())
         master.destroy() 
-        self.refresh()
+        self.refresh() # Still need to fix this method
     
     def new_window_energetic(self):
         '''
@@ -96,7 +108,9 @@ class GUI:
         self.master.destroy()
         self.__init__(self.master, self.energetic, self.header)
 
-
+    def main(self):
+        if self.get_selected_header() != "Select header size":
+            print(self.get_selected_header())
 
 if __name__ == '__main__':
     root = Tk()
@@ -114,6 +128,10 @@ if __name__ == '__main__':
     ]
     
     gui = GUI(root,list,header_database)
-    gui.drop_menu()
+
 
     root.mainloop()
+    
+    
+
+    
